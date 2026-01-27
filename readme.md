@@ -5,7 +5,7 @@
 ![](https://img.shields.io/badge/Type-Academic%20Research-orange)
 ![](https://img.shields.io/badge/Status-Experimental-success)
 
-![cover](figures/system_block.png)
+![cover](figures/Setup_MedicionPotencia.jpg)
 
 - [RF Energy Harvesting Module for IoT Applications](#rf-energy-harvesting-module-for-iot-applications)
   * [1. Introduction](#1-introduction)
