@@ -1,1 +1,65 @@
 
+* ==========================================================
+* RF HARVESTING -> PMIC IDEAL (POTENCIA LIMITADA) -> SUPERCAP
+* -> CARGA IoT (SLEEP + BURST) CONTROLADA POR UVLO (SW SCHMITT)
+* Control del switch: V(ncap) con hist resis Von/Voff
+* ==========================================================
+
+.param VDC=1.65
+.param RMEAS=900
+.param Pin = VDC*VDC/RMEAS       ; W
+.param eta = 0.75
+.param Pcap = eta*Pin            ; W hacia el supercap
+
+.param Ccap = 1
+.param Rleak = 1Meg
+.param Rbleed = 1G
+
+.param Vmin=0.05
+.param Imax=0.02
+.param Vstop=2.80
+
+.param Von=2.50
+.param Voff=2.20
+.param Vt = (Von+Voff)/2
+.param Vh = (Von-Voff)
+
+.param Isleep = 100u
+.param Iburst = 20m
+
+* -------------------------
+* Supercap
+* -------------------------
+C1 ncap 0 {Ccap}
+Rleak1 ncap 0 {Rleak}
+Rbleed1 ncap 0 {Rbleed}
+
+* -------------------------
+* PMIC ideal (carga por potencia)
+* Sentido correcto: corriente entra a ncap
+* -------------------------
+BCHG 0 ncap I = if(V(ncap) < Vstop, min(Pcap/max(V(ncap), Vmin), Imax), 0)
+
+* -------------------------
+* UVLO: switch Schmitt nativo
+* ctrl se conecta a 1V cuando V(ncap) cruza Von, y vuelve a 0 cuando baja de Voff
+* -------------------------
+VONE one 0 1
+RPD  ctrl 0 1Meg                 ; pull-down: ctrl=0 cuando el switch est  OFF
+
+* Switch: une ctrl con one, CONTROLADO por V(ncap)
+S1 ctrl one ncap 0 SWUVLO
+.model SWUVLO SW(Ron=1 Roff=1e12 Vt={Vt} Vh={Vh})
+
+* -------------------------
+* Carga IoT
+* -------------------------
+ISLEEP ncap 0 DC {Isleep}
+BBURST ncap 0 I = Iburst*V(ctrl)
+
+* -------------------------
+* Simulaci n
+* -------------------------
+.tran 0 2000 0 100m startup
+.options plotwinsize=0
+.end
