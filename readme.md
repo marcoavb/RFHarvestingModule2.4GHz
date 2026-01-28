@@ -4,6 +4,7 @@
 ![](https://img.shields.io/badge/Band-2.4GHz%20ISM-green)
 ![](https://img.shields.io/badge/Type-Academic%20Research-orange)
 ![](https://img.shields.io/badge/Status-Experimental-success)
+![Visitors](https://komarev.com/ghpvc/?username=marcoavb&repo=RFHarvestingModule2.4GHz&color=blue)
 
 ![cover](figures/SetupCompleto.jpg)
 
